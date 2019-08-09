@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
   <meta charset="utf-8">
   <title>Sign in &laquo; Admin</title>
   <link rel="stylesheet" href="../assets/vendors/bootstrap/css/bootstrap.css">
   <link rel="stylesheet" href="../assets/css/admin.css">
 </head>
+
 <body>
   <div class="login">
     <div class="login-wrap">
       <img class="avatar" src="../assets/img/default.png">
-      <!-- 有错误信息时展示 -->
+      <!-- 有错误信息时展示-----默认隐藏 -->
       <div class="alert alert-danger" style="display: none;">
         <strong>错误！</strong> <span id="msg">用户名或密码错误！</span>
       </div>
@@ -22,8 +24,68 @@
         <label for="password" class="sr-only">密码</label>
         <input id="password" type="password" class="form-control" placeholder="密码">
       </div>
-      <button class="btn btn-primary btn-block">登 录</button>
+      <!-- 给登录按钮添加id---#login -->
+      <button class="btn btn-primary btn-block" id="login">登 录</button>
     </div>
   </div>
+  <!-- 引入JavaScript文件 -->
+  <script src="../assets/vendors/jquery/jquery.min.js"></script>
+  <script>
+    //给登录按钮注册点击事件
+    $('#login').on('click', function () {
+      //获取输入框内容
+      var email = $('#email').val();
+      var password = $('#password').val();
+
+      //验证邮箱格式
+      var emailReg = /\w+[@]\w+[.]\w+/
+
+      //正则验证邮箱是否合法---.test()
+      if (!emailReg.test(email)) {
+        //弹出对话框-----.fadeIn()--->淡入 .delay()--->延时 .fadeOut()--->淡出
+        $('.alert').fadeIn(500).delay(1000).fadeOut(500);
+        $('#msg').text('邮箱不合法');
+        return;
+      }
+
+      //验证密码是否合法
+      var pwdReg = /\w{4,18}/;
+
+      if (!pwdReg.test(password)) {
+        //弹出对话框-----.fadeIn()--->淡入 .delay()--->延时 .fadeOut()--->淡出
+        $('.alert').fadeIn(500).delay(1000).fadeOut(500);
+        $('#msg').text('密码不合法');
+        return;
+      }
+
+      //发送ajax
+      $.ajax({
+        type: 'post',
+        url: '/login',
+        data: {
+          email: email,
+          password: password
+        },
+        //成功返回
+        success: function (res) {
+          //跳转首页
+          location.href = 'index.html'
+
+        },
+        //失败返回
+        error: function () {
+          $('.alert').fadeIn(500).delay(1000).fadeOut(500);
+          $('#msg').text('邮箱或密码不合法');
+        }
+      });
+
+      /**-----测试代码-----*/
+      //测试点击事件是否注册成功
+      // alert("ok"); 
+      //测试是否能成功获取用户输入内容
+      // console.log(email);
+    });
+  </script>
 </body>
+
 </html>
