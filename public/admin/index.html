@@ -1,5 +1,20 @@
+<!-- 登录拦截 star -->
+
+<!-- 获取用户登录状态 -->
+<script src="/login/status"></script>
+
+<!-- 如果未登录跳转登录页面 -->
+<script>
+  if (!isLogin) {
+    location.href = 'login.html';
+  }
+</script>
+
+<!-- 登录拦截 end -->
+
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
   <meta charset="utf-8">
   <title>Dashboard &laquo; Admin</title>
@@ -9,6 +24,7 @@
   <link rel="stylesheet" href="../assets/css/admin.css">
   <script src="../assets/vendors/nprogress/nprogress.js"></script>
 </head>
+
 <body>
   <script>NProgress.start()</script>
 
@@ -17,7 +33,8 @@
       <button class="btn btn-default navbar-btn fa fa-bars"></button>
       <ul class="nav navbar-nav navbar-right">
         <li><a href="profile.html"><i class="fa fa-user"></i>个人中心</a></li>
-        <li><a href="login.html"><i class="fa fa-sign-out"></i>退出</a></li>
+        <!-- 给退出按钮添加id---#logout -->
+        <li><a href="JavaScript:;" id="logout"><i class="fa fa-sign-out"></i>退出</a></li>
       </ul>
     </nav>
     <div class="container-fluid">
@@ -85,5 +102,26 @@
   <script src="../assets/vendors/jquery/jquery.js"></script>
   <script src="../assets/vendors/bootstrap/js/bootstrap.js"></script>
   <script>NProgress.done()</script>
+  <script>
+    //注册点击事件
+    $('#logout').on('click', function () {
+      //如果用户点击退出按钮弹出确认对话框
+      if (window.confirm('确定要退出吗')) {
+        $.ajax({
+          type: 'post',
+          url: '/logout',
+          //退出成功
+          success: function () {
+            location.href = 'login.html'
+          },
+          //退出失败
+          error: function(){
+            alert('退出失败')
+          }
+        })//end $.ajax
+      }//end if
+    });
+  </script>
 </body>
+
 </html>
