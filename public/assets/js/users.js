@@ -33,10 +33,11 @@ function render(arr) {
 
 }//end function
 
-//添加用户
+//添加用户---获得数据---写入数据库
 $('button').on('click', function () {
     /**---------- 测试 ----------*/
     // console.log($('#userForm').serialize()); //查看提交的数据
+    // return;
 
     $.ajax({
         url: '/users',
@@ -61,4 +62,33 @@ $('button').on('click', function () {
     /**---------- 测试 ----------*/
     // alert("ok") //测试提交功能
 
+})
+
+//上传头像---将文件上传到指定目录
+$('#avatar').on('change', function () {
+    //将用户上次的图片追加到对象中
+    var formData = new FormData();
+    formData.append('avatar', this.files[0]);
+    /**---------- 测试 ----------*/
+    // console.log(this.files[0]) //打印上传文件信息
+
+    $.ajax({
+        type: 'post',
+        url: '/upload',
+        data: formData,
+        //不请求参数
+        processData: false,
+        //不请求参数类型
+        contentType: false,
+        //上传成功
+        success: function (res) {
+            //头像预览
+            $('#preview').attr('src', res[0].avatar);
+            //将图片地址添加到表单隐藏域---存储图片路径
+            $('#hiddenAvatar').val(res[0].avatar);
+            
+            /**---------- 测试 ----------*/
+            // console.log(res) //打印上传的图片---数组---查看图片路径
+        }
+    })
 })
