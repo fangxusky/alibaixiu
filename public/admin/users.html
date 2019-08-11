@@ -62,36 +62,38 @@
                 <input type="hidden" name="avatar" id="hiddenAvatar">
               </div>
             </div>
+            <!-- 给每一个表单元素添加id -->
             <div class="form-group">
               <label>邮箱</label>
-              <input class="form-control" type="email" placeholder="请输入邮箱" name="email">
+              <input class="form-control" type="email" placeholder="请输入邮箱" name="email" id="email">
             </div>
             <div class="form-group">
               <label>昵称</label>
-              <input class="form-control" type="text" placeholder="请输入昵称" name="nickName">
+              <input class="form-control" type="text" placeholder="请输入昵称" name="nickName" id="nickName">
             </div>
             <div class="form-group">
               <label>密码</label>
-              <input class="form-control" type="text" placeholder="请输入密码" name="password">
+              <input class="form-control" type="text" placeholder="请输入密码" name="password" id="password">
             </div>
             <div class="form-group">
               <div class="radio-inline">
-                <label><input type="radio" name="status" value="0">未激活</label>
+                <label><input type="radio" name="status" value="0" id="inactive">未激活</label>
               </div>
               <div class="radio-inline">
-                <label><input type="radio" name="status" value="1">激活</label>
+                <label><input type="radio" name="status" value="1" id="active">激活</label>
               </div>
             </div>
             <div class="form-group">
               <div class="radio-inline">
-                <label><input type="radio" name="role" value="admin">超级管理员</label>
+                <label><input type="radio" name="role" value="admin" id="admin">超级管理员</label>
               </div>
               <div class="radio-inline">
-                <label><input type="radio" name="role" value="normal">普通用户</label>
+                <label><input type="radio" name="role" value="normal" id="normal">普通用户</label>
               </div>
             </div>
             <div class="form-group">
-              <button class="btn btn-primary" type="button">添加</button>
+              <button class="btn btn-primary" type="button" id="userAdd">添加</button>
+              <button class="btn btn-primary" type="button" id="userEdit" style="display: none;">修改</button>
             </div>
           </form>
           <!-- 用户表单 end -->
@@ -215,8 +217,10 @@
     <td>{{$value.nickName}}</td>
     <td>{{$value.status == 1 ? '激活' : '未激活'}}</td>
     <td>{{$value.role == "admin" ? '超级管理员' : '普通用户'}}</td>
-    <td class="text-center">
-      <a href="javascript:;" class="btn btn-default btn-xs">编辑</a>
+    <!-- 添加data-id属性,将用户id保存给编辑与删除按钮的父元素身上 -->
+    <td class="text-center" data-id={{@$value._id}}>
+      <!-- 给编辑按钮添加class类名---.edit -->
+      <a href="javascript:;" class="btn btn-default btn-xs edit">编辑</a>
       <a href="javascript:;" class="btn btn-danger btn-xs">删除</a>
     </td>
   </tr>
