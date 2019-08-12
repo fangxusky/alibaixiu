@@ -197,7 +197,7 @@ $('#userEdit').on('click', function () {
             /**---------- 测试 ----------*/
             // console.log(res); //打印修改够的数据---提交给数据库
             // console.log(userArr); //打印数组中的数据---本地数据
-            // console.log(index); //打印数组下标
+            // console.log(index); //打印数组下标 
         }
     });
 
@@ -205,3 +205,105 @@ $('#userEdit').on('click', function () {
     // console.log($('#userForm').serialize()); //是否能拿到修改信息
 });
 
+//删除用户功能
+//删除单个用户-----注册点击事件
+$('tbody').on('click', '.del', function () {
+    //弹出确认框
+    if (window.confirm('真的要删除吗?')) {
+        var id = $(this).parent().attr('data-id');
+        //发送ajax请求
+        $.ajax({
+            type: 'delete',
+            url: '/users/' + id,
+            success: function (res) {
+                // 删除数组中的数据
+                var index = userArr.findIndex(item => item._id == res._id);
+                // 调用splice()
+                userArr.splice(index, 1);
+                //重新渲染页面
+                render(userArr);
+
+                /**---------- 测试 ----------*/
+                // console.log(res);
+            }
+        });
+    }
+});
+
+//实现全选功能
+//给头部复选框(<th>)注册点击事件
+$('thead input').on('click', function () {
+    //获取当前元素的选中状态-----头部<th>的状态决定下面复选框<td>的状态
+    let flag = $(this).prop('checked'); //prop('参数')=>获取某个元素的指定属性的值
+    //设置下面复选框的选中状态
+    $('tbody input').prop('checked', flag); //prop('key', value)=>向某个元素设置属性
+
+    //判断全选状态,显示批量删除按钮
+    if (flag) {
+        $('.btn-sm').show();
+    } else {
+        $('.btn-sm').hide();
+    }
+});
+
+//给下面的复选框(<td>)注册点击事件
+$('tbody').on('click', 'input', function () {
+    //判断下面复选框的个数是否等于已选中的复选框的个数
+    if ($('tbody input').length == $('tbody input:checked').length) {
+        //勾选头部复选框
+        $('thead input').prop('checked', true);
+    } else {
+        //取消头部复选框的选中状态
+        $('thead input').prop('checked', false);
+    }
+
+    //判断下面复选框选中个数,显示批量删除按钮
+    if ($('tbody input:checked').length > 1) {
+        $('.btn-sm').show();
+    } else {
+        $('.btn-sm').hide();
+    }
+});
+
+//实现批量删除功能
+$('.btn-sm').on('click', function () {
+    //定义空数组存储选中id
+    var ids = [];
+
+    //获取选中的元素
+    var checkUser = $('tbody input:checked')
+
+    //对checkUser对象进行遍历
+    checkUser.each(function (k, v) {
+        //获取被选中元素的id-----通过找到祖元素<tr>来拿到<tr>下面的子元素<td>的属性值
+        var id = v.parentNode.parentNode.children[6].getAttribute('data-id');
+        //将获取的id存储到数组中
+        ids.push(id);
+
+        /**---------- 测试 ----------*/
+        // console.log(k, v); //打印选中元素
+        // console.log(id); //打印选中元素的id
+    });
+
+    // 发送ajax
+    $.ajax({
+        type: 'delete',
+        url: '/users/' + ids.join('-'),
+        success: function (res) {
+            res.forEach(e => {
+                /**---------- 测试 ----------*/
+                // console.log(e);// 打印的是数组中被删除的元素对象
+
+                var index = userArr.findIndex(item => item._id == e._id);
+                //调用splice()方法删除元素
+                userArr.splice(index, 1);
+                render(userArr);
+            });
+            /**---------- 测试 ----------*/
+            // console.log(res); // 打印是否成功拿到数据-----拿到的是数组
+        }
+    });
+
+    /**---------- 测试 ----------*/
+    // console.log(checkUser);
+});
